@@ -176,7 +176,7 @@ function getMemberInfo(node, sourceCode) {
 	let async = false;
 	let decorators = [];
 
-	if (node.type === 'ClassProperty') {
+	if (node.type === 'ClassProperty' || node.type === 'ClassPrivateProperty') {
 		type = 'property';
 		const [first, second] = sourceCode.getFirstTokens(node.key, 2);
 		name = second && second.type === 'Identifier' ? second.value : first.value;
