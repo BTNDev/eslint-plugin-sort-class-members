@@ -179,7 +179,7 @@ function getMemberInfo(node, sourceCode) {
 	if (node.type === 'ClassProperty' || node.type === 'ClassPrivateProperty') {
 		type = 'property';
 		const [first, second] = sourceCode.getFirstTokens(node.key, 2);
-		name = second && second.type === 'Identifier' ? second.value : first.value;
+		name = second && second.type === 'Identifier' ? first.value + second.value : first.value;
 		propertyType = node.value ? node.value.type : node.value;
 		decorators =
 			(!!node.decorators &&
@@ -193,7 +193,7 @@ function getMemberInfo(node, sourceCode) {
 			const keyAfterToken = sourceCode.getTokenAfter(node.key);
 			name = sourceCode.getText().slice(keyBeforeToken.range[0], keyAfterToken.range[1]);
 		} else {
-			name = node.key.name;
+			name = node.key.name ? node.key.name : `#${node.key.id.name}`;
 		}
 		type = 'method';
 		async = node.value && node.value.async;
@@ -391,11 +391,13 @@ const builtInGroups = {
 	'accessor-pairs': { accessorPair: true },
 	'static-properties': { type: 'property', static: true },
 	'conventional-private-properties': { type: 'property', name: '/_.+/' },
+	'private-properties': { type: 'property', name: '/#.+/' },
 	'arrow-function-properties': { propertyType: 'ArrowFunctionExpression' },
 	methods: { type: 'method' },
 	'static-methods': { type: 'method', static: true },
 	'async-methods': { type: 'method', async: true },
 	'conventional-private-methods': { type: 'method', name: '/_.+/' },
+	'private-methods': { type: 'method', name: '/#.+/' },
 	'everything-else': {},
 };
 
